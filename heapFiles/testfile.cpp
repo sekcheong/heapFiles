@@ -71,6 +71,10 @@ int main(int argc, char **argv)
     rec1.i = i;
     rec1.f = i;
     
+    if (i==77) {
+      cout << "hello" << endl;
+    }
+    
     dbrec1.data = &rec1;
     dbrec1.length = sizeof(RECORD);
     status = iScan->insertRecord(dbrec1, newRid);
@@ -98,36 +102,47 @@ int main(int argc, char **argv)
   cout << endl;
   cout << "pull 11th record from file dummy.02 using file->getRecord() " << endl;
   file1 = new HeapFile("dummy.02", status); // open the file
-  if (status != OK) error.print(status);
-  else
-  {
+  
+  if (status != OK) {
+    error.print(status);
+  }
+  else {
     // get every record
-    for (i=0;i<num;i=i+11)
-    {
+    for (i=0;i<num;i=i+11) {
       // reconstruct record for comparison purposes
       sprintf(rec1.s, "This is record %05d", i);
       rec1.i = i;
       rec1.f = i;
+      if (i==77) {
+        cout << "hello" << endl;
+      }
       
       // now read the record
       //printf("getting record (%d.%d)\n",ridArray[i].pageNo, ridArray[i].slotNo);
       status = file1->getRecord(ridArray[i], dbrec2);
-      if (status != OK) error.print(status);
       
+      if (status != OK) {
+        error.print(status);
+      }
+
+      RECORD *rec = (RECORD*) dbrec2.data;
       // compare with what we should get back
-      if (memcmp(&rec1, dbrec2.data, sizeof(RECORD)) != 0)
-        cout << "err0r reading record " << i << " back" << endl;
+      if (memcmp(&rec1, dbrec2.data, sizeof(RECORD)) != 0) {
+        cout << "error reading record " << i << " back" << endl;
+      }
     }
     cout << "getRecord() tests passed successfully" << endl;
   }
+  
   delete file1;
   
   // scan the file sequentially checking that each record was stored properly
   cout << "scan file dummy.02 " << endl;
   scan1 = new HeapFileScan("dummy.02", status);
-  if (status != OK) error.print(status);
-  else
-  {
+  if (status != OK) {
+    error.print(status);
+  }
+  else {
     scan1->startScan(0, 0, STRING, NULL, EQ);
     i = 0;
     while ((status = scan1->scanNext(rec2Rid)) != FILEEOF)

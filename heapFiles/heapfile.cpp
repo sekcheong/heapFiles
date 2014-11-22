@@ -28,11 +28,11 @@ const Status createHeapFile(const string fileName)
     }
     
     status = db.openFile(fileName, file);
-    
     if (status!=OK) {
       return status;
     }
     
+    // allocate the header page
     status = bufMgr->allocPage(file,  hdrPageNo, newPage);
     if (status!=OK) {
       return status;
@@ -41,6 +41,7 @@ const Status createHeapFile(const string fileName)
     hdrPage = (FileHdrPage*) newPage;
     strcpy(hdrPage->fileName, fileName.c_str());
     
+    // allocate the first data page
     status = bufMgr->allocPage(file, newPageNo, newPage);
     if (status!=OK) {
       return status;
@@ -302,7 +303,7 @@ const Status HeapFileScan::scanNext(RID& outRid)
   tmpRid = curRec;
   while (true) {
     while (true) {
-      
+      // if curRec is NULLRID, read the first record
       if ((tmpRid.pageNo == NULLRID.pageNo) && (curRec.slotNo==NULLRID.slotNo)) {
         status = curPage->firstRecord(nextRid);
       }
@@ -481,7 +482,7 @@ const Status InsertFileScan::insertRecord(const Record & rec, RID& outRid)
     if (status!=OK) {
       return status;
     }
-    
+    // bring in the last page for record insertion
     status = bufMgr->readPage(filePtr, headerPage->lastPage, newPage);
     if (status!=OK) {
       return status;
@@ -502,6 +503,7 @@ const Status InsertFileScan::insertRecord(const Record & rec, RID& outRid)
       break;
     
     case NOSPACE:
+      //the last page is full we need to allocate a new page for record insertion
       status = bufMgr->allocPage(filePtr, newPageNo, newPage);
       if (status!=OK) {
         return status;

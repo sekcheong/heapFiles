@@ -457,10 +457,10 @@ InsertFileScan::~InsertFileScan()
 // Insert a record into the file
 const Status InsertFileScan::insertRecord(const Record & rec, RID& outRid)
 {
-  Page*	  newPage;
-  int		  newPageNo;
-  Status	status;
-  RID		  rid;
+  Page*   newPage;
+  int     newPageNo;
+  Status  status;
+  RID     rid;
   
   outRid = NULLRID;
   

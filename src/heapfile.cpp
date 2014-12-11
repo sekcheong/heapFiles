@@ -4,12 +4,12 @@
 // routine to create a heapfile
 const Status createHeapFile(const string fileName)
 {
-  File* 		    file;
-  Status 		    status;
-  FileHdrPage*	hdrPage;
-  int			      hdrPageNo;
-  int			      newPageNo;
-  Page*		      newPage;
+  File*         file;
+  Status        status;
+  FileHdrPage*  hdrPage;
+  int           hdrPageNo;
+  int           newPageNo;
+  Page*         newPage;
   
   // make sure the file name is smaller than the max name size
   if (fileName.length()>(MAXNAMESIZE-1)) {
@@ -83,8 +83,8 @@ const Status destroyHeapFile(const string fileName)
 // constructor opens the underlying file
 HeapFile::HeapFile(const string & fileName, Status& returnStatus)
 {
-  Status 	status;
-  Page*	  pagePtr;
+  Status  status;
+  Page*   pagePtr;
   int     hdrPageNo;
   
   // open the file and read in the header page and the first data page
@@ -288,7 +288,7 @@ const Status HeapFileScan::resetScan()
 
 const Status HeapFileScan::scanNext(RID& outRid)
 {
-  Status 	status = OK;
+  Status  status = OK;
   RID     nextRid;
   RID     tmpRid;
   int     nextPageNo;
